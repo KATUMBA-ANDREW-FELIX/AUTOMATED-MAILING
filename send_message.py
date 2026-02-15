@@ -1,53 +1,56 @@
 import os
+from dotenv import load_dotenv
 import resend
-from typing import Any
+
+load_dotenv()  # Loads .env if you have one
 
 def send_daily_message() -> None:
-    # Load API key from environment (never hardcode it!)
-    api_key = os.getenv("re_EXTWLh8D_EjU7ZhwdxY3vJ7f8NNkNhXeZ")
+    api_key = os.getenv("RESEND_API_KEY")
     if not api_key:
-        print("Error: RESEND_API_KEY environment variable is missing!")
+        print("Error: RESEND_API_KEY not found!")
         return
 
     resend.api_key = api_key
 
-    # IMPORTANT: Use a VERIFIED sender address!
-    #   → Go to Resend dashboard → Domains → Add & verify your domain
-    #   → Then use e.g. "FELIX FROM RTON <felix@yourdomain.com>"
-    # For quick testing: "onboarding@resend.dev" or your sandbox sender works, but limited.
-    sender = "FELIX FROM RTON <support@ritonproperties.com>"   # ← CHANGE THIS
+    # Use sandbox for testing if domain not verified yet
+    sender = "onboarding@resend.dev"  # Switch to "FELIX FROM RTON <support@ritonproperties.com>" after verification
+    # sender = "FELIX FROM RTON <support@ritonproperties.com>"
 
-    recipient = os.getenv("rickmanricky256@gmail.com")  # Better env var name
-    if not recipient:
-        print("Error: RECIPIENT_EMAIL environment variable is missing!")
+    # Load comma-separated emails from env var
+    recipients_str = os.getenv("RECIPIENT_EMAILS")
+    if not recipients_str:
+        print("Error: RECIPIENT_EMAILS not found in env or .env!")
+        print("Example: export RECIPIENT_EMAILS=email1@gmail.com,email2@yahoo.com")
         return
 
-    params: resend.Emails.SendParams = {
+    # Split into list and strip any extra spaces
+    recipients = [email.strip() for email in recipients_str.split(",")]
+
+    if not recipients:
+        print("No valid recipients found after splitting!")
+        return
+
+    print(f"Sending to: {', '.join(recipients)}")  # Helpful debug
+
+    params = {
         "from": sender,
-        "to": [recipient],                  # List of strings — even for 1 recipient
+        "to": recipients,  # ← This is the key change: now a list!
         "subject": "Your Daily Message",
         "html": """
         <h2>Hello!</h2>
         <p>This is your automated daily message FROM KATUMBA ANDREW FELIX.</p>
-        <p>WASSWA PLEASE BRING THE LAPTOP WITH U AS U COME FROM WORK</p>
+        <p><strong>WASSWA PLEASE BRING THE LAPTOP WITH U AS U COME FROM WORK</strong></p>
         <p>— Your Automation</p>
         """,
-        # Optional extras you can add later:
-        # "cc": ["someone@else.com"],
-        # "bcc": ["log@yourdomain.com"],
-        # "reply_to": "felix@yourdomain.com",
-        # "tags": [{"name": "daily", "value": "reminder"}],
     }
 
     try:
-        email: Any = resend.Emails.send(params)  # Returns dict with 'id'
+        email = resend.Emails.send(params)
         print(f"Email sent successfully! ID: {email['id']}")
-    except resend.ResendError as e:
-        print(f"Resend API error: {e}")
-        if hasattr(e, 'response'):
-            print(f"Full response: {e.response}")
-    except Exception as e:
-        print(f"Unexpected error sending email: {e}")
-
-if __name__ == "__main__":
-    send_daily_message()
+        # Optional: print more details for debugging
+        # print("Full response:", email)
+    except Exception as e:  # Catch-all for API/network/validation errors
+        print(f"Error sending email: {e}")
+        # Optional: add more debug info
+        import traceback
+        traceback.print_exc()  # Prints full stack trace if needed
