@@ -1,0 +1,14 @@
+# Python bytecode / cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environment variables / secrets (VERY IMPORTANT)
+.env
+
+# Optional but recommended for most Python projects
+*.env.example   # ← You can commit this one (with blank values)
+.venv/
+venv/
+ENV/
