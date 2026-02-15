@@ -2,8 +2,8 @@ name: Send Daily Email via Resend
 
 on:
   schedule:
-    - cron: '0 12 * * *'          # 12:00 UTC 
-  workflow_dispatch:             # Lets you test manually from Actions tab
+    - cron: '0 12 * * *'         # 12:00 UTC = 15:00 EAT (3 PM Uganda time)
+  workflow_dispatch:
 
 jobs:
   send-email:
@@ -16,13 +16,15 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'   # or '3.12' — fine either way
+          python-version: '3.11'   # or '3.12' – fine either way
 
       - name: Install dependencies
-        run: pip install resend     # python-dotenv not needed here (no .env file in CI)
+        run: |
+          pip install --upgrade pip   # optional but good practice
+          pip install resend python-dotenv
 
       - name: Send daily email
         env:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-          RECEIVER_EMAILS: ${{ secrets.RECEIVER_EMAILS }}   # ← Updated name
+          RECEIVER_EMAILS: ${{ secrets.RECEIVER_EMAILS }}
         run: python send_message.py
