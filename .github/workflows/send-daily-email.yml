@@ -1,16 +1,15 @@
-name: Send Daily Email via Resend
+name: Send Daily Emails
 
 on:
   schedule:
-    - cron: '0 12 * * *'          # 12:00 UTC daily
-  workflow_dispatch:             # manual trigger
+    - cron: '0 12 * * *'          # 12:00 UTC = 3:00 PM EAT
+  workflow_dispatch:
 
 jobs:
-  send-email:
+  send:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -18,9 +17,9 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install resend python-dotenv   # ← add python-dotenv here!
+        run: pip install resend
 
-      - name: Send daily email
+      - name: Send email
         env:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           RECIPIENT_EMAILS: ${{ secrets.RECIPIENT_EMAILS }}
