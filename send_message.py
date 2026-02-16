@@ -1,8 +1,5 @@
 import os
-from dotenv import load_dotenv
 import resend
-
-load_dotenv()  # Loads .env if you have one
 
 def send_daily_message() -> None:
     api_key = os.getenv("RESEND_API_KEY")
@@ -13,28 +10,26 @@ def send_daily_message() -> None:
     resend.api_key = api_key
 
     # Use sandbox for testing if domain not verified yet
-    sender = "onboarding@resend.dev"  # Switch to "FELIX FROM RTON <support@ritonproperties.com>" after verification
+    sender = "onboarding@resend.dev"  # Switch later after domain verification
     # sender = "FELIX FROM RTON <support@ritonproperties.com>"
 
-    # Load comma-separated emails from env var
-    recipients_str = os.getenv("RECIPIENT_EMAILS")
+    recipients_str = os.getenv("RECIPIENT_EMAILS")  # ← Make sure this matches your secret name
     if not recipients_str:
-        print("Error: RECIPIENT_EMAILS not found in env or .env!")
-        print("Example: export RECIPIENT_EMAILS=email1@gmail.com,email2@yahoo.com")
+        print("Error: RECIPIENT_EMAILS not found!")
+        print("Example format: email1@gmail.com,email2@yahoo.com")
         return
 
-    # Split into list and strip any extra spaces
     recipients = [email.strip() for email in recipients_str.split(",")]
 
     if not recipients:
-        print("No valid recipients found after splitting!")
+        print("No valid recipients found!")
         return
 
-    print(f"Sending to: {', '.join(recipients)}")  # Helpful debug
+    print(f"Sending to: {', '.join(recipients)}")
 
     params = {
         "from": sender,
-        "to": recipients,  # ← This is the key change: now a list!
+        "to": recipients,
         "subject": "Your Daily Message",
         "html": """
         <h2>Hello!</h2>
@@ -47,10 +42,7 @@ def send_daily_message() -> None:
     try:
         email = resend.Emails.send(params)
         print(f"Email sent successfully! ID: {email['id']}")
-        # Optional: print more details for debugging
-        # print("Full response:", email)
-    except Exception as e:  # Catch-all for API/network/validation errors
+    except Exception as e:
         print(f"Error sending email: {e}")
-        # Optional: add more debug info
         import traceback
-        traceback.print_exc()  # Prints full stack trace if needed
+        traceback.print_exc()
