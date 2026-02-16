@@ -20,10 +20,10 @@ jobs:
 
       - name: Install dependencies
         run: pip install resend   
-        run: pip install resend python-dotenv  # python-dotenv not needed here (no .env file in CI)
+        run: pip install resend python-dotenv  # python-dotenv not needed here (no .env file in CI) but can use it for local run
 
       - name: Send daily email
         env:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-          RECIPIENT_EMAILS: ${{ secrets.RECIPIENT_EMAILS }}   # ← Updated name
+          RECIPIENT_EMAILS: ${{ secrets.RECIPIENT_EMAILS }} 
         run: python send_message.py
