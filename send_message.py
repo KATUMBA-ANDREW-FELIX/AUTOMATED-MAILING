@@ -17,7 +17,7 @@ def send_daily_message() -> None:
 
     resend.api_key = api_key
 
-    sender = "onboarding@resend.dev"  # change to verified sender later
+    sender = "FELIX FROM RTON <support@ritonproperties.com>"   # or hello@yourdomain.com
 
     recipients_str = os.getenv("RECIPIENT_EMAILS")
     if not recipients_str:
