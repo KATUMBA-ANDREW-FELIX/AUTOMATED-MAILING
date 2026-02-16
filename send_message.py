@@ -40,7 +40,7 @@ def send_daily_message() -> None:
         <h2>Hello!</h2>
         <p>This is your automated daily message FROM KATUMBA ANDREW FELIX.</p>
         <p><strong>WASSWA PLEASE BRING THE LAPTOP WITH U AS U COME FROM WORK</strong></p>
-        <p>— Your Automation</p>
+        <p>— Your Automation BY FELIX system automations</p>
         """,
     }
 
