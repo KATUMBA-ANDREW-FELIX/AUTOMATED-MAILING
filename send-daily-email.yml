@@ -24,5 +24,5 @@ jobs:
       - name: Send daily email
         env:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-          RECEIVER_EMAILS: ${{ secrets.RECEIVER_EMAILS }}   # ← Updated name
+          RECIPIENT_EMAILS: ${{ secrets.RECIPIENT_EMAILS }}   # ← Updated name
         run: python send_message.py
