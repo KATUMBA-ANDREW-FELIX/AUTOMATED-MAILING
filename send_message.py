@@ -1,14 +1,11 @@
 import os
-from dotenv import load_dotenv
 import resend
 
+# Optional debug (keep for now, remove later if you want clean logs)
 print("=== DEBUG START ===")
 print("Current folder:", os.getcwd())
-print(".env file exists?", os.path.exists('.env'))
-print("dotenv found and loaded?", load_dotenv())
-print("All env vars (partial):", {k: v[:10]+"..." if v else None for k,v in os.environ.items() if k in ["RESEND_API_KEY", "RECIPIENT_EMAILS"]})
-
-load_dotenv()  # still good to keep
+print("RESEND_API_KEY present?", bool(os.getenv("RESEND_API_KEY")))
+print("RECIPIENT_EMAILS present?", bool(os.getenv("RECIPIENT_EMAILS")))
 
 def send_daily_message() -> None:
     api_key = os.getenv("RESEND_API_KEY")
@@ -20,7 +17,7 @@ def send_daily_message() -> None:
 
     resend.api_key = api_key
 
-    sender = "FELIX FROM RTON <support@ritonproperties.com>"
+    sender = "onboarding@resend.dev"  # change to verified sender later
 
     recipients_str = os.getenv("RECIPIENT_EMAILS")
     if not recipients_str:
@@ -55,5 +52,5 @@ def send_daily_message() -> None:
         import traceback
         traceback.print_exc()
 
-# This is the missing piece – call the function!
+# Run it
 send_daily_message()
