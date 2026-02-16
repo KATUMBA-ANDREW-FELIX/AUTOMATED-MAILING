@@ -20,7 +20,7 @@ def send_daily_message() -> None:
 
     resend.api_key = api_key
 
-    sender = "onboarding@resend.dev"
+    sender = "FELIX FROM RTON <support@ritonproperties.com>"
 
     recipients_str = os.getenv("RECIPIENT_EMAILS")
     if not recipients_str:
