@@ -19,6 +19,7 @@ jobs:
           python-version: '3.11'   # or '3.12' — fine either way
 
       - name: Install dependencies
+        run: pip install resend python-dotenv
         run: pip install resend     # python-dotenv not needed here (no .env file in CI)
 
       - name: Send daily email
